@@ -152,7 +152,7 @@ namespace GraphMVVM.PowerSource
             if (path != "")
             {
 
-
+                List<int> datafromport = new List<int>();
 
                 string[] csv = File.ReadAllLines(path);
 
@@ -170,28 +170,36 @@ namespace GraphMVVM.PowerSource
                 byte[] send = new byte[1];
                 int row = 0;
                 int k = 0;
-                foreach (var l in csv)
+                foreach (var l in csv)// по строчно читает файл
                 {
-                    char[] ar = l.ToCharArray();
+                    datafromport.Clear();
+                    char[] ar = l.ToCharArray(); // преобазует строку в массив чаров
 
-                    byte[] sen = new byte[ar.Length+1];
+                    byte[] sen = new byte[ar.Length+1]; 
                     for (int i = 0; i < ar.Length; i++)
                     {
-                        sen[i] = Convert.ToByte(ar[i]);
+                        sen[i] = Convert.ToByte(ar[i]); // заполняет массив байтами
                     }
-                    sen[sen.Length - 1] = 0x0D;
+                    sen[sen.Length - 1] = 0x0D; 
                     SerialPort.Write(sen, 0, sen.Length);
 
+                    // byte[] datafromport = new byte
+
+                   datafromport.Add(SerialPort.ReadByte());
+                   datafromport.Add(SerialPort.ReadByte());
+                   do
+                   {
+                        datafromport.Add(SerialPort.ReadByte());
+                   }
+                   while (datafromport[datafromport.Count - 2] != 0x0A && datafromport[datafromport.Count - 1] != 0x0D); // как только это придет будет выход из цикла
+
+
+
+
+
+
                     //SerialPort.Write(l); // отправляет строку вида W...;...;...
-                    int datafromport;
-                    do
-                    {
-                        datafromport = SerialPort.ReadByte(); // читает
-                    }
-                    while (datafromport != 0x0D); // как только это придет он отправит следующую строку
 
-
-                    
 
                     //for (int i = 0; i < ar.Length; i++)
                     //{
@@ -200,7 +208,7 @@ namespace GraphMVVM.PowerSource
 
                     //}
 
-                    
+
 
 
                     //Thread.Sleep(500);
