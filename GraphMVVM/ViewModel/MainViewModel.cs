@@ -195,7 +195,7 @@ namespace GraphMVVM.ViewModel
             Status = "Отправка данных в СОМ-port";
             return Observable.Start(() =>
             {
-                
+                GetProgressAsync();
                     PowerSource.CreateAndSendCsvFile(PathToFile);
                     Status = "Отправка данных завершена";
             }
@@ -344,7 +344,7 @@ namespace GraphMVVM.ViewModel
 
                 CopyDataOnClickTreeViewAsync(GridTableData, SecondPlotData);
                 ProgressData.Clear();
-                GetProgressAsync();
+               // GetProgressAsync();
                 //}
             }
             if (args is DirectoryModel)
@@ -374,7 +374,7 @@ namespace GraphMVVM.ViewModel
             if (!sp.IsOpen)
             {
                 sp.PortName = portName;
-                sp.BaudRate = 921600;
+                sp.BaudRate = 9600;// 921600
                 sp.DataBits = 8;
                 sp.Parity = Parity.None;
                 sp.StopBits = StopBits.One;
@@ -466,6 +466,7 @@ namespace GraphMVVM.ViewModel
      
         public void SendDataToPowerSource(ObservableCollection<BaseDataModel> baseDataModels)
         {
+          
                 PowerSource.SendData(baseDataModels);
         }
         
@@ -481,7 +482,7 @@ namespace GraphMVVM.ViewModel
 
             if (ClickFlag == false)
             {
-
+                
                 do
                 {
                     ProgressData = PowerSource.GetProgressData();
@@ -495,7 +496,7 @@ namespace GraphMVVM.ViewModel
                     FirstOxyPlotModel.InvalidatePlot(true);
                 }
                 while (ProgressValue < 100);
-               
+                
 
             }
         }
