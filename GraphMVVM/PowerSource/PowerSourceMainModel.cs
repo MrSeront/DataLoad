@@ -164,9 +164,9 @@ namespace GraphMVVM.PowerSource
                 //    sen[i] = Convert.ToByte(ar[i]);
                 //}
                 //SerialPort.Write(sen, 0, sen.Length);
-
+                int[] buff = new int[2];
                 OpenPort();
-
+                int j=0;
                 byte[] send = new byte[1];
                 int row = 0;
                 int k = 0;
@@ -185,13 +185,12 @@ namespace GraphMVVM.PowerSource
 
                     // byte[] datafromport = new byte
 
-                   datafromport.Add(SerialPort.ReadByte());
-                   datafromport.Add(SerialPort.ReadByte());
                    do
                    {
-                        datafromport.Add(SerialPort.ReadByte());
+                        buff[j] = SerialPort.ReadByte();
+                        j = (j + 1) & 1;
                    }
-                   while (datafromport[datafromport.Count - 2] != 0x0A && datafromport[datafromport.Count - 1] != 0x0D); // как только это придет будет выход из цикла
+                   while (buff[(j-1)&1]==0x0F && buff[j]==0x0D); 
 
 
 
