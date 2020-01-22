@@ -146,56 +146,88 @@ namespace GraphMVVM.PowerSource
         }
 
 
-        public void CreateAndSendCsvFile(string path)
+        public void CreateAndSendCsvFile(string path, bool threadSleep)
         {
             ProgressValue = 0;
             if (path != "")
             {
 
-                List<int> datafromport = new List<int>();
+                //List<int> datafromport = new List<int>();
 
                 string[] csv = File.ReadAllLines(path);
 
                 // 0.14  SerialPort.WriteLine(l); while (datafromport != '\r');
                 //0.15  char[] ar = l.ToCharArray();
+                //0.25 
                 //byte[] sen = new byte[ar.Length];
                 //for (int i = 0; i < ar.Length; i++)
                 //{
                 //    sen[i] = Convert.ToByte(ar[i]);
                 //}
                 //SerialPort.Write(sen, 0, sen.Length);
-                int[] buff = new int[2];
+
                 OpenPort();
-                int j=0;
+                int j = 0;
                 byte[] send = new byte[1];
                 int row = 0;
                 int k = 0;
-                foreach (var l in csv)// по строчно читает файл
+                //int readdata;
+                //int count;
+                int[] buff = new int[2];
+                for (int i = 0; i < csv.Length; i++)// по строчно читает файл
                 {
-                    datafromport.Clear();
-                    char[] ar = l.ToCharArray(); // преобазует строку в массив чаров
+                    string l = csv[i];
 
-                    byte[] sen = new byte[ar.Length+1]; 
-                    for (int i = 0; i < ar.Length; i++)
-                    {
-                        sen[i] = Convert.ToByte(ar[i]); // заполняет массив байтами
-                    }
-                    sen[sen.Length - 1] = 0x0D; 
-                    SerialPort.Write(sen, 0, sen.Length);
+                    buff[0] = 0;
+                    buff[1] = 0;
+
+                    char[] ar = l.ToCharArray(); // преобазует строку в массив чаров
+                   
+                    send[0] = 0x0D;
+                   
+                    //byte[] sen = new byte[ar.Length + 1];
+                    //for (int i = 0; i < ar.Length; i++)
+                    //{
+                    //    sen[i] = Convert.ToByte(ar[i]); // заполняет массив байтами
+                    //}
+
+                    //sen[sen.Length - 1] = 0x0D;
+                    //Console.WriteLine("Начало отправки данных");
+                    //for (int i = 0; i < sen.Length; i++)
+                    //{
+                    //    count = 0;
+                    //    SerialPort.Write(sen, i, 1);
+                        
+                    //    do
+                    //    {
+                    //        readdata = SerialPort.ReadByte();
+                    //        count +=1;
+                    //        Console.Write(Convert.ToChar(readdata)+"(" + count +")");
+                    //    } while (readdata!=sen[i]);
+                       
+                    //}
+                    // Console.WriteLine("Отправка данных закончена");
+                    SerialPort.Write(ar, 0, ar.Length);
+                    SerialPort.Write(send, 0, 1);
 
                     // byte[] datafromport = new byte
+                    //Console.WriteLine("Считываение ответа");
 
-                   do
-                   {
+                    do
+                    {
                         buff[j] = SerialPort.ReadByte();
+                       // Console.Write(Convert.ToChar(buff[j]));
                         j = (j + 1) & 1;
-                   }
-                   while (buff[(j-1)&1]==0x0F && buff[j]==0x0D); 
 
-
-
-
-
+                    }
+                    while (buff[(j - 1) & 1] != 0x0A || buff[j] != 0x0D);
+                   // Console.WriteLine("Переход к следуюзим данным");
+                    if (threadSleep)
+                    {
+                        //Console.WriteLine("ThreadSleep");
+                        Thread.Sleep(1);
+                    }
+                    
 
                     //SerialPort.Write(l); // отправляет строку вида W...;...;...
 
@@ -206,10 +238,6 @@ namespace GraphMVVM.PowerSource
                     //        SerialPort.Write(Convert.ToString(ar[i]));
 
                     //}
-
-
-
-
                     //Thread.Sleep(500);
                     row++;
                     ProgressValue = row * 100 / csv.Length;

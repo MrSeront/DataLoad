@@ -11,15 +11,15 @@
         FontSize="14"
         >
 
-   
+
 
 
 
 
     <Grid  TextOptions.TextRenderingMode="Aliased" TextOptions.TextFormattingMode="Display">
         <TabControl  Name="TabCon" Margin="0,0,0,40">
-            
-                
+
+
             <TabItem Name="TabFile" Header="Файл">
 
                 <Grid>
@@ -152,8 +152,10 @@
         <ProgressBar HorizontalAlignment="Left" Margin="215,0,0,10" Width="100" Value="{Binding ProgressValue}" Height="25" VerticalAlignment="Bottom"/>
         <TextBlock HorizontalAlignment="Left" TextAlignment="Center" Margin="215,0,0,13" TextWrapping="Wrap" Text="{Binding ProgressText}" Height="19" VerticalAlignment="Bottom" Width="100"/>
         <Button Content="Отправить файл" Margin="0,0,10,10" FontSize="14"  Command="{Binding WeldingCommand}" Height="22" VerticalAlignment="Bottom" HorizontalAlignment="Right" Width="116"/>
-        <Label Content="{Binding Status}" Margin="0,0,131,0" HorizontalAlignment="Right" Width="282" Height="40" VerticalAlignment="Bottom" HorizontalContentAlignment="Center" 
+        <Label Content="{Binding Status}" Margin="0,0,281,0" HorizontalAlignment="Right" Width="282" Height="40" VerticalAlignment="Bottom" HorizontalContentAlignment="Center" 
                VerticalContentAlignment="Center" />
+
         <Button Content="A" Margin="0,0,131,10" FontSize="14"  Command="{Binding ACommand}" Height="22" VerticalAlignment="Bottom" HorizontalAlignment="Right" Width="19"/>
+        <CheckBox Content="1 ms ThreadSleep"   Margin="0,0,150,10" HorizontalAlignment="Right" Width="131" Height="22" VerticalAlignment="Bottom" IsChecked="{Binding IsMilliSecondsSleep}"/>
     </Grid>
 </Window>

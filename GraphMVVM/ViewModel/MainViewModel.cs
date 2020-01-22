@@ -44,6 +44,7 @@ namespace GraphMVVM.ViewModel
         [Reactive] public ObservableCollection<GridTable> GridTableData { get; set; } = new ObservableCollection<GridTable>();
         [Reactive] public string Status { get; set; }
 
+        [Reactive] public bool IsMilliSecondsSleep { get; set; }
 
 
         //private DataGridCellInfo cellInfo;
@@ -196,7 +197,7 @@ namespace GraphMVVM.ViewModel
             return Observable.Start(() =>
             {
                 GetProgressAsync();
-                    PowerSource.CreateAndSendCsvFile(PathToFile);
+                    PowerSource.CreateAndSendCsvFile(PathToFile, IsMilliSecondsSleep);
                     Status = "Отправка данных завершена";
             }
             );
@@ -209,7 +210,7 @@ namespace GraphMVVM.ViewModel
             {
 
                 PowerSource.Welding();
-                Status = "Отправка комманды \"as\"";
+                Status = "Отправка комманды завершена";
             }
             );
         }
@@ -374,7 +375,7 @@ namespace GraphMVVM.ViewModel
             if (!sp.IsOpen)
             {
                 sp.PortName = portName;
-                sp.BaudRate = 9600;// 921600
+                sp.BaudRate = 921600;
                 sp.DataBits = 8;
                 sp.Parity = Parity.None;
                 sp.StopBits = StopBits.One;
